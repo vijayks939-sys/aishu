@@ -1113,48 +1113,6 @@
         </div>
     </div>
 
-    <!-- EMERGENCY MODAL OVERLAY -->
-    <div id="emergency-modal"
-        class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm hidden">
-        <div
-            class="clay-card w-full max-w-xs p-8 flex flex-col items-center text-center animate-in fade-in zoom-in duration-300 border-4 border-clay-danger/20">
-            <div class="size-20 rounded-full bg-clay-danger shadow-clay-float flex items-center justify-center mb-6">
-                <span class="material-symbols-outlined text-white text-4xl animate-pulse">priority_high</span>
-            </div>
-            <h2 class="text-clay-text text-lg font-black leading-tight uppercase tracking-tight mb-4">
-                EMERGENCY MESSAGE HAS BEEN SENT TO
-            </h2>
-            <div class="space-y-2 text-left w-full px-4">
-                <p class="text-clay-danger font-black text-sm flex items-center gap-3">
-                    <span
-                        class="size-6 rounded-full bg-clay-danger/20 flex items-center justify-center text-[10px]">1</span>
-                    CHILDREN
-                </p>
-                <p class="text-clay-danger font-black text-sm flex items-center gap-3">
-                    <span
-                        class="size-6 rounded-full bg-clay-danger/20 flex items-center justify-center text-[10px]">2</span>
-                    NEIGHBOUR
-                </p>
-                <p class="text-clay-danger font-black text-sm flex items-center gap-3">
-                    <span
-                        class="size-6 rounded-full bg-clay-danger/20 flex items-center justify-center text-[10px]">3</span>
-                    HOSPITAL
-                </p>
-            </div>
-            <div id="location-status" class="mt-6 flex flex-col items-center gap-2">
-                <div
-                    class="flex items-center gap-2 text-[10px] font-bold text-clay-subtext uppercase tracking-widest bg-clay-bg px-4 py-2 rounded-full shadow-clay-inner">
-                    <span class="material-symbols-outlined text-sm animate-spin">location_on</span>
-                    <span id="location-text">Capturing Live Location...</span>
-                </div>
-                <p id="sms-guide"
-                    class="text-[9px] font-black text-clay-danger opacity-0 transition-opacity duration-500 uppercase tracking-widest mt-2">
-                    Tap 'Send' in your SMS app
-                </p>
-            </div>
-        </div>
-    </div>
-
     <script>
         function sendOkSms() {
             const phoneNumber = "6369557647";
@@ -1187,63 +1145,8 @@
 
         function triggerEmergencyCall() {
             const phoneNumber = "6369557647";
-            const modal = document.getElementById('emergency-modal');
-            const statusEl = document.getElementById('location-status');
-            const locationText = document.getElementById('location-text');
-            const smsGuide = document.getElementById('sms-guide');
-
-            if (modal) {
-                modal.classList.remove('hidden');
-
-                // OS detection for SMS delimiter
-                const ua = navigator.userAgent.toLowerCase();
-                const isiOS = /iphone|ipad|ipod/.test(ua);
-                const delimiter = isiOS ? '&' : '?';
-
-                // Attempt to get location
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                        (position) => {
-                            const lat = position.coords.latitude;
-                            const lng = position.coords.longitude;
-                            const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
-                            const message = encodeURIComponent(`EMERGENCY! My live location: ${mapsUrl}`);
-
-                            if (locationText) locationText.textContent = "Location Captured";
-                            const icon = statusEl.querySelector('.material-symbols-outlined');
-                            if (icon) {
-                                icon.textContent = "location_on";
-                                icon.classList.remove('animate-spin');
-                                icon.classList.add('text-clay-success');
-                            }
-                            if (smsGuide) smsGuide.classList.remove('opacity-0');
-
-                            // Pre-fill SMS with location link
-                            setTimeout(() => {
-                                window.location.href = `sms:${phoneNumber}${delimiter}body=${message}`;
-                            }, 800);
-                        },
-                        (error) => {
-                            if (locationText) {
-                                locationText.textContent = "Location Denied";
-                                const icon = statusEl.querySelector('.material-symbols-outlined');
-                                if (icon) {
-                                    icon.textContent = "location_off";
-                                    icon.classList.remove('animate-spin');
-                                    icon.classList.add('text-clay-danger');
-                                }
-                            }
-                        }
-                    );
-                }
-
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                    window.location.href = `tel:${phoneNumber}`;
-                }, 5000); // 5 seconds to provide time for SMS app to load and user to tap send
-            } else {
-                window.location.href = `tel:${phoneNumber}`;
-            }
+            alert("Emergency call initiated to " + phoneNumber);
+            window.location.href = `tel:${phoneNumber}`;
         }
 
         function toggleCheckinTimings() {
